@@ -47,11 +47,3 @@
 
 This repository currently represents the **design and planning stage** (Assignment 01 — IE3132 Penetration Testing) for the Kernel0X CTF Play Box. Full implementation follows in later stages of the module.
 
-## Team
-
-| Member | Responsibility |
-|---|---|
-| Member 1 | CTF Platform & Architecture |
-| Member 2 | Challenge Design A |
-| Member 3 | Challenge Design B |
-| Member 4 | Integration, Testing & Documentation |
