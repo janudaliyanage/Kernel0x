@@ -16,13 +16,11 @@ export default function Navbar() {
   const location = useLocation()
 
   return (
-    <nav className="bg-black border-b border-[#dc1327]/30 px-6 py-4 flex items-center justify-between">
-      {/* Logo */}
+    <nav className="bg-[#0a0d0a] border-b border-[#9dff1f]/30 px-6 py-4 flex items-center justify-between">
       <div className="flex items-center">
         <img src={logo} alt="Kernel0X" className="h-10 w-auto" />
       </div>
 
-      {/* Right side: nav links + icons */}
       <div className="flex items-center gap-10">
         <div className="flex items-center gap-8">
           {navLinks.map((link) => {
@@ -33,8 +31,8 @@ export default function Navbar() {
                 to={link.path}
                 className={`font-heading flex items-center gap-1 text-sm tracking-wide transition-colors ${
                   isActive
-                    ? "text-[#dc1327]"
-                    : "text-gray-300 hover:text-[#dc1327]"
+                    ? "text-[#9dff1f]"
+                    : "text-gray-400 hover:text-[#9dff1f]"
                 }`}
               >
                 {isActive && <ArrowRight className="w-4 h-4" />}
@@ -44,10 +42,10 @@ export default function Navbar() {
           })}
         </div>
 
-        <div className="flex items-center gap-5 text-gray-300">
-          <Search className="w-5 h-5 cursor-pointer hover:text-[#dc1327] transition-colors" />
-          <Bell className="w-5 h-5 cursor-pointer hover:text-[#dc1327] transition-colors" />
-          <User className="w-5 h-5 cursor-pointer hover:text-[#dc1327] transition-colors" />
+        <div className="flex items-center gap-5 text-gray-400">
+          <Search className="w-5 h-5 cursor-pointer hover:text-[#9dff1f] transition-colors" />
+          <Bell className="w-5 h-5 cursor-pointer hover:text-[#9dff1f] transition-colors" />
+          <User className="w-5 h-5 cursor-pointer hover:text-[#9dff1f] transition-colors" />
         </div>
       </div>
     </nav>
