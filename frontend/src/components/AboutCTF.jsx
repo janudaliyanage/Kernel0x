@@ -1,8 +1,9 @@
 import brainJar from "@/assets/brainjar.png"
+import skeleton from "@/assets/skeleton.png"
 
 export default function AboutCTF() {
   return (
-    <section className="relative bg-[#0a0d0a] min-h-screen overflow-hidden px-8 md:px-16 flex items-center">
+    <section id="about-ctf" className="relative bg-[#0a0d0a] min-h-screen overflow-hidden px-8 md:px-16 flex items-center">
       <div className="grid md:grid-cols-2 gap-12 items-center w-full">
         {/* Left: text */}
         <div>
@@ -28,13 +29,20 @@ export default function AboutCTF() {
           </div>
         </div>
         <div className="flex justify-end pr-16 md:pr-32">
-  <img
-    src={brainJar}
-    alt="Kernel0x specimen jar"
-    className="w-72 md:w-96 h-auto animate-float drop-shadow-[0_0_25px_rgba(157,255,31,0.35)]"
-  />
-</div>
+          <img
+            src={brainJar}
+            alt="Kernel0x specimen jar"
+            className="w-72 md:w-96 h-auto animate-float drop-shadow-[0_0_25px_rgba(157,255,31,0.35)]"
+          />
+        </div>
       </div>
+
+      {/* Skeleton pixel art - peeking in from the right edge, lower area */}
+      <img
+        src={skeleton}
+        alt=""
+        className="absolute right-0 bottom-8 md:bottom-0 w-40 md:w-56 h-auto opacity-70 translate-x-1/3"
+      />
     </section>
   )
 }

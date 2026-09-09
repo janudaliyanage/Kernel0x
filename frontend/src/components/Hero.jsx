@@ -1,11 +1,11 @@
 export default function Hero() {
   return (
-    <section className="relative bg-[#0a0d0a] overflow-hidden min-h-screen flex flex-col">
+    <section id="home" className="relative bg-[#0a0d0a] overflow-hidden min-h-screen flex flex-col">
       <div
         className="absolute inset-0 opacity-40 flex items-center justify-center"
         style={{ filter: 'hue-rotate(70deg) saturate(3) brightness(0.9)' }}
       >
-      <div className="w-[100%] aspect-square rounded-full overflow-hidden">
+        <div className="w-[100%] aspect-square rounded-full overflow-hidden">
           <spline-viewer
             url="https://prod.spline.design/HeOqga2-WDqf3EkX/scene.splinecode"
             style={{ width: '100%', height: '100%' }}

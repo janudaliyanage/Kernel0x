@@ -37,6 +37,7 @@ export default function FAQ() {
 
   return (
     <section className="relative bg-[#0a0d0a] py-24 px-8 md:px-16">
+      <section id="faqs" className="relative bg-[#0a0d0a] py-24 px-8 md:px-16"></section>
       <div className="flex items-center justify-end gap-4 mb-10">
         <div className="w-16 h-1 bg-[#9dff1f]" />
         <span className="text-gray-400 tracking-widest text-sm font-mono">

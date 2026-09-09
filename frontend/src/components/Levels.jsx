@@ -1,5 +1,6 @@
 import { Lock, ArrowRight } from "lucide-react"
-import brainJar from "@/assets/brainjar.png"
+import brainJar from "@/assets/flag.png"
+import skeleton from "@/assets/skeleton.png"
 
 const levels = [
   {
@@ -30,7 +31,7 @@ const levels = [
 
 export default function Levels() {
   return (
-    <section className="relative bg-[#0a0d0a] min-h-screen px-8 md:px-16 py-16">
+    <section id="levels" className="relative bg-[#0a0d0a] min-h-screen overflow-hidden px-8 md:px-16 py-16">
       <p className="font-mono text-[#9dff1f] text-sm mb-4">
         &gt; loading levels.db...
       </p>
@@ -45,7 +46,6 @@ export default function Levels() {
         className="grid md:grid-cols-[0.8fr_1fr] gap-1"
         style={{ minHeight: "600px" }}
       >
-        {/* Featured / currently unlocked level */}
         <div className="relative bg-[#10140f] flex flex-col justify-end p-8 min-h-[400px] md:min-h-0 overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center">
             <img
@@ -71,7 +71,6 @@ export default function Levels() {
           </div>
         </div>
 
-        {/* 2x2 grid of remaining levels */}
         <div className="grid grid-cols-2 grid-rows-2 gap-1">
           {levels.map((level) => {
             const isClosed = level.variant === "closed"
@@ -146,6 +145,13 @@ export default function Levels() {
           })}
         </div>
       </div>
+
+      {/* Skeleton pixel art - peeking in from the left edge, lower area */}
+      <img
+        src={skeleton}
+        alt=""
+        className="absolute left-0 bottom-8 md:bottom-16 w-40 md:w-56 h-auto opacity-70 -translate-x-1/3"
+      />
     </section>
   )
 }

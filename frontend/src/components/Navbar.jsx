@@ -1,45 +1,31 @@
-import { Search, Bell, User, ArrowRight } from "lucide-react"
-import { Link, useLocation } from "react-router-dom"
+import { Search, Bell, User } from "lucide-react"
 import logo from "@/assets/logo1.png"
 
 const navLinks = [
-  { name: "HOME", path: "/" },
-  { name: "ABOUT CTF", path: "/about" },
-  { name: "LEVELS", path: "/levels" },
-  { name: "LEADERBOARD", path: "/leaderboard" },
-  { name: "PRIZES", path: "/prizes" },
-  { name: "MODERATORS", path: "/moderators" },
-  { name: "FAQS", path: "/faqs" },
+  { name: "HOME", href: "#home" },
+  { name: "ABOUT CTF", href: "#about-ctf" },
+  { name: "LEVELS", href: "#levels" },
+  { name: "FAQS", href: "#faqs" },
 ]
 
 export default function Navbar() {
-  const location = useLocation()
-
   return (
-    <nav className="bg-[#0a0d0a] border-b border-[#9dff1f]/30 px-6 py-4 flex items-center justify-between">
+    <nav className="bg-[#0a0d0a] border-b border-[#9dff1f]/30 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
       <div className="flex items-center">
         <img src={logo} alt="Kernel0X" className="h-10 w-auto" />
       </div>
 
       <div className="flex items-center gap-10">
         <div className="flex items-center gap-8">
-          {navLinks.map((link) => {
-            const isActive = location.pathname === link.path
-            return (
-              <Link
-                key={link.name}
-                to={link.path}
-                className={`font-heading flex items-center gap-1 text-sm tracking-wide transition-colors ${
-                  isActive
-                    ? "text-[#9dff1f]"
-                    : "text-gray-400 hover:text-[#9dff1f]"
-                }`}
-              >
-                {isActive && <ArrowRight className="w-4 h-4" />}
-                {link.name}
-              </Link>
-            )
-          })}
+          {navLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              className="font-heading text-sm tracking-wide text-gray-400 hover:text-[#9dff1f] transition-colors"
+            >
+              {link.name}
+            </a>
+          ))}
         </div>
 
         <div className="flex items-center gap-5 text-gray-400">
