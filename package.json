@@ -1,18 +1,14 @@
 {
-  "name": "frontend",
+  "name": "kernel0x",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "imports": {
-    "@/*": ["./src/*"]
-  },
+  "version": "1.0.0",
   "scripts": {
-    ...
-  },
-  "dependencies": {
-    ...
+    "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"cyan,green\" \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build"
   },
   "devDependencies": {
-    ...
+    "concurrently": "^9.1.2"
   }
 }

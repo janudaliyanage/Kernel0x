@@ -1,0 +1,23 @@
+NexaLabs Security Investigation
+
+NexaLabs has identified suspicious activity surrounding its public
+e-commerce development project.
+
+The security team believes the activity may have left traces
+in publicly available developer information.
+
+Initial lead:
+NexaLabs maintains an online development presence.
+
+Your task:
+Identify the developer associated with the suspicious activity
+and investigate the available public project history.
+
+Useful tools:
+- Web browser
+- GitHub Search
+- WHOIS
+- ExifTool
+
+Do not assume the first result is the answer.
+Follow the evidence.
