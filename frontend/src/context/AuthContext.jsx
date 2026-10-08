@@ -53,6 +53,11 @@ export function AuthProvider({ children }) {
       password,
       teamName,
     })
+    if (res.data.success && res.data.token) {
+      localStorage.setItem("kernel0x_token", res.data.token)
+      setToken(res.data.token)
+      setUser(res.data.user)
+    }
     return res.data
   }
 

@@ -12,6 +12,7 @@ export const config = {
   clientUrl: process.env.CLIENT_URL || "http://localhost:5173",
   ctfEventUrl: process.env.CTF_EVENT_URL || "/ctf-portal",
   nodeEnv: process.env.NODE_ENV || "development",
+  requireEmailVerification: false,
   
   // Email SMTP config (optional - console fallback will activate if not provided)
   smtp: {

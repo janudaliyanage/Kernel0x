@@ -1,8 +1,9 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Search, Bell, User, Menu, X, ShieldCheck, LogOut, Terminal } from "lucide-react"
+import { Search, User, Menu, X, ShieldCheck, LogOut, Terminal } from "lucide-react"
 import logo from "@/assets/logo1.png"
 import { useAuth } from "@/context/AuthContext"
+import { useSearch } from "@/context/SearchContext"
 
 const navLinks = [
   { name: "HOME", href: "/#home" },
@@ -13,6 +14,7 @@ const navLinks = [
 
 export default function Navbar() {
   const { user, isAuthenticated, openAuthModal, logout } = useAuth()
+  const { openSearch } = useSearch()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const navigate = useNavigate()
 
@@ -82,14 +84,35 @@ export default function Navbar() {
             </div>
           )}
 
-          <div className="flex items-center gap-3 pl-2 border-l border-[#1c231d] text-gray-500">
-            <Search className="w-4 h-4 cursor-pointer hover:text-[#9dff1f] transition-colors" />
-            <Bell className="w-4 h-4 cursor-pointer hover:text-[#9dff1f] transition-colors" />
+          {/* Search Trigger Button (Bell icon removed) */}
+          <div className="flex items-center pl-2 border-l border-[#1c231d]">
+            <button
+              type="button"
+              onClick={openSearch}
+              className="flex items-center gap-2 p-1.5 text-gray-400 hover:text-[#9dff1f] hover:bg-[#121811] border border-transparent hover:border-[#9dff1f]/30 transition-all cursor-pointer group"
+              title="Search CTF Matrix [Ctrl+K]"
+              aria-label="Search CTF"
+            >
+              <Search className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              <kbd className="hidden xl:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono text-gray-500 bg-[#070907] border border-[#1c231d] group-hover:border-[#9dff1f]/40 group-hover:text-gray-300 transition-colors">
+                Ctrl K
+              </kbd>
+            </button>
           </div>
         </div>
 
-        {/* Mobile Hamburger Toggle */}
+        {/* Mobile Hamburger Toggle & Search */}
         <div className="flex items-center gap-2 md:hidden">
+          <button
+            type="button"
+            onClick={openSearch}
+            className="p-2 text-gray-400 hover:text-[#9dff1f] transition-colors cursor-pointer"
+            aria-label="Search CTF Matrix"
+            title="Search"
+          >
+            <Search className="w-5 h-5" />
+          </button>
+
           {isAuthenticated ? (
             <Link
               to="/ctf-portal"
@@ -119,6 +142,23 @@ export default function Navbar() {
       {/* Mobile Menu Dropdown Panel */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-[#1c231d] bg-[#0a0d0a] mt-3 pt-4 pb-6 px-4 space-y-4 animate-in slide-in-from-top-2 duration-200">
+          {/* Mobile search bar */}
+          <button
+            type="button"
+            onClick={() => {
+              setMobileMenuOpen(false)
+              openSearch()
+            }}
+            className="w-full flex items-center justify-between px-3.5 py-2.5 bg-[#101610] border border-[#1c231d] hover:border-[#9dff1f]/50 text-gray-400 hover:text-[#9dff1f] font-mono text-xs transition-colors cursor-pointer"
+          >
+            <span className="flex items-center gap-2">
+              <Search className="w-3.5 h-3.5 text-[#9dff1f]" />
+              <span>SEARCH KERNEL0X MATRIX...</span>
+            </span>
+            <kbd className="text-[10px] bg-[#070907] px-1.5 py-0.5 border border-[#1c231d] text-gray-500">
+              Ctrl K
+            </kbd>
+          </button>
           <div className="flex flex-col space-y-3">
             {navLinks.map((link) => (
               <a

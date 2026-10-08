@@ -2,6 +2,7 @@ import express from "express"
 import cors from "cors"
 import { config } from "./config/config.js"
 import authRoutes from "./routes/auth.routes.js"
+import ctfRoutes from "./routes/ctf.routes.js"
 import { userStore } from "./db/store.js"
 
 // Initialize Express gateway
@@ -32,6 +33,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use("/api/auth", authRoutes)
+app.use("/api/ctf", ctfRoutes)
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ChevronDown, HelpCircle } from "lucide-react"
 
 const faqs = [
@@ -39,6 +39,20 @@ const faqs = [
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(null)
 
+  useEffect(() => {
+    const handleOpenFaq = (e) => {
+      if (typeof e.detail === "number" && e.detail >= 0 && e.detail < faqs.length) {
+        setOpenIndex(e.detail)
+        const el = document.getElementById(`faq-item-${e.detail}`)
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" })
+        }
+      }
+    }
+    window.addEventListener("kernel0x:open-faq", handleOpenFaq)
+    return () => window.removeEventListener("kernel0x:open-faq", handleOpenFaq)
+  }, [])
+
   return (
     <section id="faqs" className="relative bg-[#0a0d0a] py-16 sm:py-24 px-4 sm:px-8 md:px-16">
       <div className="max-w-7xl mx-auto">
@@ -59,7 +73,11 @@ export default function FAQ() {
           {faqs.map((item, i) => {
             const isOpen = openIndex === i
             return (
-              <div key={item.q} className="border-b border-[#1c231d] last:border-b-0 bg-[#0c100c]/60">
+              <div
+                key={item.q}
+                id={`faq-item-${i}`}
+                className="border-b border-[#1c231d] last:border-b-0 bg-[#0c100c]/60 transition-colors"
+              >
                 <button
                   onClick={() => setOpenIndex(isOpen ? null : i)}
                   className="w-full flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 text-left transition-colors hover:bg-[#121811] cursor-pointer"

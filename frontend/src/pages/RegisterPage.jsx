@@ -21,10 +21,10 @@ export default function RegisterPage() {
     try {
       const data = await register(form)
       if (data.success) {
-        setSuccessMsg("Registration transmitted. Redirecting to email verification...")
+        setSuccessMsg(data.message || "Registration transmitted! Entering CTF platform...")
         setTimeout(() => {
-          navigate(`/verify?email=${encodeURIComponent(data.email)}`)
-        }, 1000)
+          navigate(data.redirectUrl || "/ctf-portal")
+        }, 800)
       }
     } catch (err) {
       setErrorMsg(err.response?.data?.message || "Registration failed. Please check your inputs.")
@@ -53,7 +53,7 @@ export default function RegisterPage() {
           <div className="mb-6">
             <h1 className="font-heading text-3xl text-white tracking-wide">JOIN KERNEL0X CTF</h1>
             <p className="font-mono text-xs text-gray-400 mt-1">
-              Create your operative account. Email verification is required to participate.
+              Create your operative account to enter the CTF competition.
             </p>
           </div>
 
@@ -145,7 +145,7 @@ export default function RegisterPage() {
                 </>
               ) : (
                 <>
-                  <span>CONTINUE TO VERIFY EMAIL</span>
+                  <span>JOIN CTF &amp; ENTER PORTAL</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}

@@ -2,38 +2,60 @@ import nodemailer from "nodemailer"
 import { config } from "../config/config.js"
 
 let transporter = null
+let lastUser = null
+let lastPass = null
 
 function getTransporter() {
-  if (transporter) return transporter
+  const currentUser = (config.smtp.user || process.env.SMTP_USER || "").trim()
+  const currentPass = (config.smtp.pass || process.env.SMTP_PASS || "").replace(/\s+/g, "")
 
-  if (config.smtp.user && config.smtp.pass) {
-    const cleanPass = config.smtp.pass.replace(/\s+/g, "")
+  if (transporter && lastUser === currentUser && lastPass === currentPass) {
+    return transporter
+  }
+
+  if (currentUser && currentPass) {
     try {
-      if (!config.smtp.host && (config.smtp.user.includes("@gmail.com") || process.env.SMTP_SERVICE === "gmail")) {
+      if (!config.smtp.host && (currentUser.includes("@gmail.com") || process.env.SMTP_SERVICE === "gmail")) {
         transporter = nodemailer.createTransport({
           service: "gmail",
+          pool: true,
+          maxConnections: 5,
+          maxMessages: 100,
+          connectionTimeout: 5000,
+          greetingTimeout: 5000,
+          socketTimeout: 8000,
           auth: {
-            user: config.smtp.user.trim(),
-            pass: cleanPass,
+            user: currentUser,
+            pass: currentPass,
           },
         })
-        console.log(`[EmailService] Configured Gmail service transport for ${config.smtp.user}`)
+        console.log(`[EmailService] Configured pooled Gmail service transport for ${currentUser}`)
       } else {
         transporter = nodemailer.createTransport({
           host: config.smtp.host || "smtp.gmail.com",
           port: config.smtp.port || 587,
           secure: config.smtp.secure || false,
+          pool: true,
+          maxConnections: 5,
+          maxMessages: 100,
+          connectionTimeout: 5000,
+          greetingTimeout: 5000,
+          socketTimeout: 8000,
           auth: {
-            user: config.smtp.user.trim(),
-            pass: cleanPass,
+            user: currentUser,
+            pass: currentPass,
           },
         })
-        console.log(`[EmailService] Configured SMTP transport with host ${config.smtp.host || "smtp.gmail.com"}`)
+        console.log(`[EmailService] Configured pooled SMTP transport with host ${config.smtp.host || "smtp.gmail.com"}`)
       }
+      lastUser = currentUser
+      lastPass = currentPass
     } catch (err) {
       console.error("[EmailService] Failed to create SMTP transporter:", err)
       transporter = null
     }
+  } else {
+    transporter = null
   }
 
   return transporter
@@ -109,6 +131,16 @@ Enter this code in the verification screen to activate your account and enter th
 
   if (!mailTransporter) {
     console.warn(`[EmailService] ⚠️ SMTP not configured! To deliver real emails to ${email}, please provide SMTP_USER and SMTP_PASS in backend/.env`)
+    if (config.nodeEnv === "development") {
+      console.log("\n" + "=".repeat(65))
+      console.log("  >>> [DEV MODE] EMAIL VERIFICATION CODE DISPATCHED <<<")
+      console.log("=".repeat(65))
+      console.log(`  RECIPIENT : ${email} (${username})`)
+      console.log(`  CODE      : ${verificationCode}`)
+      console.log("  NOTICE    : SMTP credentials not configured in backend/.env")
+      console.log("=".repeat(65) + "\n")
+      return { success: true, method: "dev_fallback", devFallback: true, devCode: verificationCode }
+    }
     return {
       success: false,
       error: "Email delivery failed: SMTP credentials are not set in backend/.env. Please configure your email sender to deliver verification codes to real email inboxes.",
@@ -128,6 +160,17 @@ Enter this code in the verification screen to activate your account and enter th
     return { success: true, method: "smtp", messageId: info.messageId }
   } catch (err) {
     console.error(`[EmailService] SMTP error sending to ${email}:`, err.message)
+    if (config.nodeEnv === "development") {
+      console.log("\n" + "=".repeat(65))
+      console.log("  >>> [DEV MODE] EMAIL VERIFICATION CODE DISPATCHED <<<")
+      console.log("=".repeat(65))
+      console.log(`  RECIPIENT : ${email} (${username})`)
+      console.log(`  CODE      : ${verificationCode}`)
+      console.log(`  NOTICE    : SMTP Delivery Failed (${err.message})`)
+      console.log("  REASON    : Invalid Google App Password or SMTP credentials in backend/.env")
+      console.log("=".repeat(65) + "\n")
+      return { success: true, method: "dev_fallback", devFallback: true, devCode: verificationCode, warning: err.message }
+    }
     return {
       success: false,
       error: `Failed to deliver email to ${email}: ${err.message}. Please check your SMTP credentials in backend/.env.`,

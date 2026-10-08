@@ -46,7 +46,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className="bg-[#0a0d0a] border-t border-[#1c231d]/60">
+    <footer id="contact" className="bg-[#0a0d0a] border-t border-[#1c231d]/60">
       {/* Typing banner */}
       <div className="min-h-[200px] sm:min-h-[260px] flex items-center justify-center px-4 sm:px-8 py-10">
         <p className="font-heading text-white text-2xl sm:text-4xl md:text-5xl text-center tracking-wider">
@@ -115,28 +115,9 @@ export default function Footer() {
             <p className="text-gray-500 text-xs font-mono mb-1">
               MAIL: <span className="text-gray-400">ctf@kernel0x.com</span>
             </p>
-            <p className="text-gray-500 text-xs font-mono mb-6">
+            <p className="text-gray-500 text-xs font-mono">
               FLAG_SPEC: <span className="text-[#9dff1f]">Kernel0X&#123;...&#125;</span>
             </p>
-
-            {/* Social icons */}
-            <div className="flex items-center gap-4">
-              <a href="#" aria-label="LinkedIn" className="text-gray-500 hover:text-[#9dff1f] transition-colors">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.59 0 4.25 2.36 4.25 5.44v6.3zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.75v20.5C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.75V1.75C24 .78 23.2 0 22.22 0z"/>
-                </svg>
-              </a>
-              <a href="#" aria-label="Twitter / X" className="text-gray-500 hover:text-[#9dff1f] transition-colors">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.49-1.75.85-2.72 1.04C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98A8.58 8.58 0 0 1 2 19.54a12.1 12.1 0 0 0 6.29 1.85c7.55 0 11.68-6.25 11.68-11.68 0-.18 0-.35-.01-.53A8.18 8.18 0 0 0 22.46 6z"/>
-                </svg>
-              </a>
-              <a href="#" aria-label="GitHub" className="text-gray-500 hover:text-[#9dff1f] transition-colors">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-                </svg>
-              </a>
-            </div>
           </div>
         </div>
       </div>

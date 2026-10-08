@@ -1,49 +1,34 @@
 import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
-import { X, ShieldCheck, Mail, Lock, User, Terminal, ArrowRight, RefreshCw, AlertCircle, CheckCircle2 } from "lucide-react"
+import { X, ShieldCheck, Lock, User, Terminal, ArrowRight, RefreshCw, AlertCircle, CheckCircle2 } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
 
 export default function AuthModal() {
-  const { modalState, closeAuthModal, login, register, verifyEmail, resendCode } = useAuth()
+  const { modalState, closeAuthModal, login, register } = useAuth()
   const navigate = useNavigate()
 
-  // Local view: "login" | "register" | "verify"
+  // Local view: "login" | "register"
   const [view, setView] = useState("login")
-  const [emailForVerification, setEmailForVerification] = useState("")
 
   // Form states
   const [loginForm, setLoginForm] = useState({ identifier: "", password: "" })
-  const [registerForm, setRegisterForm] = useState({ username: "", email: "", password: "", teamName: "" })
-  const [verificationCode, setVerificationCode] = useState("")
-  
+  const [registerForm, setRegisterForm] = useState({ username: "", password: "", teamName: "" })
+
   // UI states
   const [isLoading, setIsLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState("")
   const [successMsg, setSuccessMsg] = useState("")
-  const [resendCooldown, setResendCooldown] = useState(0)
 
   const modalRef = useRef(null)
 
   // Sync modal view when opened externally
   useEffect(() => {
     if (modalState.isOpen) {
-      setView(modalState.view || "login")
-      if (modalState.email) {
-        setEmailForVerification(modalState.email)
-      }
+      setView(modalState.view === "register" ? "register" : "login")
       setErrorMsg("")
       setSuccessMsg("")
     }
   }, [modalState])
-
-  // Cooldown countdown timer for resend code
-  useEffect(() => {
-    if (resendCooldown <= 0) return
-    const timer = setInterval(() => {
-      setResendCooldown((prev) => prev - 1)
-    }, 1000)
-    return () => clearInterval(timer)
-  }, [resendCooldown])
 
   // Close on Escape key
   useEffect(() => {
@@ -67,26 +52,23 @@ export default function AuthModal() {
 
     try {
       const data = await login({
-        login: loginForm.identifier,
+        login: loginForm.identifier.trim(),
         password: loginForm.password,
       })
 
       if (data.success) {
-        setSuccessMsg(data.message || "Access Granted. Redirecting to CTF Event...")
+        setSuccessMsg(data.message || "Access Granted. Entering Kernel0X CTF...")
         setTimeout(() => {
           closeAuthModal()
           navigate(data.redirectUrl || "/ctf-portal")
-        }, 1000)
+        }, 800)
       }
     } catch (err) {
-      const resp = err.response?.data
-      if (resp?.requiresVerification) {
-        setEmailForVerification(resp.email)
-        setView("verify")
-        setErrorMsg(resp.message || "Email verification required before accessing CTF event.")
-      } else {
-        setErrorMsg(resp?.message || "Failed to authenticate. Check your credentials.")
-      }
+      const msg =
+        err.response?.data?.message ||
+        (err.code === "ERR_NETWORK" ? "Unable to connect to backend server. Ensure backend is running." : err.message) ||
+        "Failed to authenticate. Check your credentials."
+      setErrorMsg(msg)
     } finally {
       setIsLoading(false)
     }
@@ -100,66 +82,26 @@ export default function AuthModal() {
     setSuccessMsg("")
 
     try {
-      const data = await register(registerForm)
-      if (data.success) {
-        setEmailForVerification(data.email)
-        setSuccessMsg("Operative registered. Please enter the verification code sent to your email.")
-        setView("verify")
-        setResendCooldown(60)
-      }
-    } catch (err) {
-      setErrorMsg(err.response?.data?.message || "Failed to register operative.")
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  // Handle Verification submission
-  const handleVerifySubmit = async (e) => {
-    e.preventDefault()
-    if (!verificationCode.trim()) {
-      setErrorMsg("Please enter the 6-digit verification code.")
-      return
-    }
-
-    setIsLoading(true)
-    setErrorMsg("")
-    setSuccessMsg("")
-
-    try {
-      const data = await verifyEmail({
-        email: emailForVerification,
-        code: verificationCode.trim(),
+      const data = await register({
+        username: registerForm.username.trim(),
+        password: registerForm.password,
+        teamName: registerForm.teamName.trim(),
       })
 
       if (data.success) {
-        setSuccessMsg("Email verified! Redirecting to CTF Event Platform...")
+        setSuccessMsg(data.message || "Operative enlisted! Entering Kernel0X CTF...")
         setTimeout(() => {
           closeAuthModal()
           navigate(data.redirectUrl || "/ctf-portal")
-        }, 1200)
+        }, 800)
       }
     } catch (err) {
-      setErrorMsg(err.response?.data?.message || "Invalid or expired verification code.")
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  // Handle Resend Verification Code
-  const handleResend = async () => {
-    if (resendCooldown > 0 || !emailForVerification) return
-    setIsLoading(true)
-    setErrorMsg("")
-
-    try {
-      const data = await resendCode(emailForVerification)
-      if (data.success) {
-        setSuccessMsg("A new verification code has been dispatched to your email inbox.")
-        setResendCooldown(60)
-      }
-    } catch (err) {
-      setErrorMsg(err.response?.data?.message || "Failed to resend code.")
+      const msg =
+        err.response?.data?.message ||
+        (err.code === "ERR_NETWORK" ? "Unable to connect to backend server. Ensure backend is running." : null) ||
+        err.message ||
+        "Failed to register operative."
+      setErrorMsg(msg)
     } finally {
       setIsLoading(false)
     }
@@ -177,51 +119,51 @@ export default function AuthModal() {
           <div className="flex items-center gap-2">
             <Terminal className="w-4 h-4 text-[#9dff1f]" />
             <span className="font-mono text-xs text-[#9dff1f] tracking-widest font-semibold uppercase">
-              {view === "verify" ? "KERNEL0X // EMAIL_VERIFY.EXE" : view === "register" ? "KERNEL0X // OPERATIVE_REGISTRATION" : "KERNEL0X // AUTHENTICATION_GATE"}
+              {view === "register" ? "KERNEL0X // OPERATIVE_REGISTRATION" : "KERNEL0X // AUTHENTICATION_GATE"}
             </span>
           </div>
           <button
             onClick={closeAuthModal}
-            className="text-gray-400 hover:text-[#9dff1f] transition-colors p-1"
+            className="text-gray-400 hover:text-[#9dff1f] transition-colors p-1 cursor-pointer"
             title="Close"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* View Switcher Tabs (when not in verify mode) */}
-        {view !== "verify" && (
-          <div className="grid grid-cols-2 border-b border-[#1c231d] bg-[#0a0d0a]">
-            <button
-              onClick={() => {
-                setView("login")
-                setErrorMsg("")
-                setSuccessMsg("")
-              }}
-              className={`py-3 font-mono text-xs tracking-wider font-semibold transition-all ${
-                view === "login"
-                  ? "bg-[#10140f] text-[#9dff1f] border-b-2 border-[#9dff1f]"
-                  : "text-gray-500 hover:text-gray-300"
-              }`}
-            >
-              [ SIGN IN ]
-            </button>
-            <button
-              onClick={() => {
-                setView("register")
-                setErrorMsg("")
-                setSuccessMsg("")
-              }}
-              className={`py-3 font-mono text-xs tracking-wider font-semibold transition-all ${
-                view === "register"
-                  ? "bg-[#10140f] text-[#9dff1f] border-b-2 border-[#9dff1f]"
-                  : "text-gray-500 hover:text-gray-300"
-              }`}
-            >
-              [ JOIN CTF ]
-            </button>
-          </div>
-        )}
+        {/* View Switcher Tabs */}
+        <div className="grid grid-cols-2 border-b border-[#1c231d] bg-[#0a0d0a]">
+          <button
+            type="button"
+            onClick={() => {
+              setView("login")
+              setErrorMsg("")
+              setSuccessMsg("")
+            }}
+            className={`py-3 font-mono text-xs tracking-wider font-semibold transition-all cursor-pointer ${
+              view === "login"
+                ? "bg-[#10140f] text-[#9dff1f] border-b-2 border-[#9dff1f]"
+                : "text-gray-500 hover:text-gray-300"
+            }`}
+          >
+            [ SIGN IN ]
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setView("register")
+              setErrorMsg("")
+              setSuccessMsg("")
+            }}
+            className={`py-3 font-mono text-xs tracking-wider font-semibold transition-all cursor-pointer ${
+              view === "register"
+                ? "bg-[#10140f] text-[#9dff1f] border-b-2 border-[#9dff1f]"
+                : "text-gray-500 hover:text-gray-300"
+            }`}
+          >
+            [ JOIN CTF ]
+          </button>
+        </div>
 
         {/* Modal Scrollable Body */}
         <div className="p-6 overflow-y-auto">
@@ -245,11 +187,11 @@ export default function AuthModal() {
             <form onSubmit={handleLoginSubmit} className="space-y-4">
               <div className="text-left mb-4">
                 <h3 className="font-heading text-xl text-white tracking-wide">OPERATIVE LOGIN</h3>
-                <p className="font-mono text-xs text-gray-400">Authenticate to enter the Kernel0X CTF system.</p>
+                <p className="font-mono text-xs text-gray-400">Authenticate using your username and password.</p>
               </div>
 
               <div>
-                <label className="block font-mono text-xs text-gray-400 mb-1">CODENAME OR EMAIL</label>
+                <label className="block font-mono text-xs text-gray-400 mb-1">OPERATIVE CODENAME (USERNAME)</label>
                 <div className="relative">
                   <User className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
                   <input
@@ -257,7 +199,7 @@ export default function AuthModal() {
                     required
                     value={loginForm.identifier}
                     onChange={(e) => setLoginForm({ ...loginForm, identifier: e.target.value })}
-                    placeholder="hacker01 or user@sliit.lk"
+                    placeholder="e.g. ghost_in_shell"
                     className="w-full bg-[#0a0d0a] border border-[#1c231d] focus:border-[#9dff1f] text-white text-sm pl-10 pr-3 py-2.5 font-mono outline-none transition-colors"
                   />
                 </div>
@@ -303,7 +245,7 @@ export default function AuthModal() {
                     setView("register")
                     setErrorMsg("")
                   }}
-                  className="font-mono text-xs text-gray-400 hover:text-[#9dff1f] transition-colors"
+                  className="font-mono text-xs text-gray-400 hover:text-[#9dff1f] transition-colors cursor-pointer"
                 >
                   Need to enlist in the CTF? <span className="underline text-[#9dff1f]">Join now &gt;</span>
                 </button>
@@ -317,7 +259,7 @@ export default function AuthModal() {
               <div className="text-left mb-4">
                 <h3 className="font-heading text-xl text-white tracking-wide">JOIN KERNEL0X CTF</h3>
                 <p className="font-mono text-xs text-gray-400">
-                  Enlist for the cybersecurity competition. Email verification is mandatory.
+                  Enlist for the cybersecurity competition. Direct portal access.
                 </p>
               </div>
 
@@ -338,21 +280,6 @@ export default function AuthModal() {
               </div>
 
               <div>
-                <label className="block font-mono text-xs text-gray-400 mb-1">OFFICIAL EMAIL (FOR VERIFICATION)</label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
-                  <input
-                    type="email"
-                    required
-                    value={registerForm.email}
-                    onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
-                    placeholder="student@sliit.lk"
-                    className="w-full bg-[#0a0d0a] border border-[#1c231d] focus:border-[#9dff1f] text-white text-sm pl-10 pr-3 py-2.5 font-mono outline-none transition-colors"
-                  />
-                </div>
-              </div>
-
-              <div>
                 <label className="block font-mono text-xs text-gray-400 mb-1">TEAM NAME / AFFILIATION (OPTIONAL)</label>
                 <div className="relative">
                   <ShieldCheck className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
@@ -367,7 +294,7 @@ export default function AuthModal() {
               </div>
 
               <div>
-                <label className="block font-mono text-xs text-gray-400 mb-1">PASSWORD (MIN 6 CHARS)</label>
+                <label className="block font-mono text-xs text-gray-400 mb-1">PASSWORD (MIN 6 CHARACTERS)</label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-3 w-4 h-4 text-gray-500" />
                   <input
@@ -390,11 +317,11 @@ export default function AuthModal() {
                 {isLoading ? (
                   <>
                     <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>TRANSMITTING CREDENTIALS...</span>
+                    <span>ENLISTING OPERATIVE...</span>
                   </>
                 ) : (
                   <>
-                    <span>PROCEED TO EMAIL VERIFICATION</span>
+                    <span>JOIN CTF &amp; ENTER PORTAL</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
@@ -407,82 +334,9 @@ export default function AuthModal() {
                     setView("login")
                     setErrorMsg("")
                   }}
-                  className="font-mono text-xs text-gray-400 hover:text-[#9dff1f] transition-colors"
+                  className="font-mono text-xs text-gray-400 hover:text-[#9dff1f] transition-colors cursor-pointer"
                 >
                   Already registered? <span className="underline text-[#9dff1f]">Sign in directly &gt;</span>
-                </button>
-              </div>
-            </form>
-          )}
-
-          {/* 3. EMAIL VERIFICATION VIEW */}
-          {view === "verify" && (
-            <form onSubmit={handleVerifySubmit} className="space-y-4">
-              <div className="text-left mb-4">
-                <div className="inline-flex items-center gap-2 bg-[#9dff1f]/10 border border-[#9dff1f]/40 px-2.5 py-1 mb-2">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#9dff1f]" />
-                  <span className="font-mono text-[11px] text-[#9dff1f] font-semibold">SECURITY CLEARANCE STEP</span>
-                </div>
-                <h3 className="font-heading text-xl text-white tracking-wide">VERIFY PARTICIPANT EMAIL</h3>
-                <p className="font-mono text-xs text-gray-400 mt-1">
-                  We sent a 6-digit confirmation code to:
-                  <br />
-                  <span className="text-[#9dff1f] font-bold">{emailForVerification || "your registered email"}</span>
-                </p>
-              </div>
-
-              <div>
-                <label className="block font-mono text-xs text-gray-400 mb-2">ENTER 6-DIGIT VERIFICATION CODE</label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    required
-                    maxLength={6}
-                    autoFocus
-                    value={verificationCode}
-                    onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, ""))}
-                    placeholder="123456"
-                    className="w-full bg-[#0a0d0a] border-2 border-[#9dff1f]/60 focus:border-[#9dff1f] text-[#9dff1f] text-center text-2xl tracking-[0.5em] font-mono py-3 outline-none"
-                  />
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full mt-2 bg-[#9dff1f] hover:bg-[#b0ff42] text-black font-mono font-bold text-sm py-3 transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
-              >
-                {isLoading ? (
-                  <>
-                    <RefreshCw className="w-4 h-4 animate-spin" />
-                    <span>VERIFYING CODE...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>VERIFY &amp; ENTER CTF EVENT</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </button>
-
-              <div className="flex items-center justify-between pt-2 border-t border-[#1c231d]">
-                <button
-                  type="button"
-                  onClick={handleResend}
-                  disabled={resendCooldown > 0 || isLoading}
-                  className="font-mono text-xs text-gray-400 hover:text-[#9dff1f] transition-colors disabled:opacity-50"
-                >
-                  {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : "Resend verification code"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setView("login")
-                    setErrorMsg("")
-                  }}
-                  className="font-mono text-xs text-gray-500 hover:text-gray-300 transition-colors"
-                >
-                  Back to Sign In
                 </button>
               </div>
             </form>

@@ -28,11 +28,7 @@ export default function LoginPage() {
       }
     } catch (err) {
       const resp = err.response?.data
-      if (resp?.requiresVerification) {
-        navigate(`/verify?email=${encodeURIComponent(resp.email)}`)
-      } else {
-        setErrorMsg(resp?.message || "Invalid credentials. Access Denied.")
-      }
+      setErrorMsg(resp?.message || "Invalid credentials. Access Denied.")
     } finally {
       setIsLoading(false)
     }

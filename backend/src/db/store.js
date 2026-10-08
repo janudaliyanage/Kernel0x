@@ -48,16 +48,19 @@ class UserStore {
   }
 
   async findByEmail(email) {
+    if (!email) return null
     const users = await this._readUsers()
-    return users.find(u => u.email.toLowerCase() === email.trim().toLowerCase()) || null
+    return users.find(u => u.email && u.email.toLowerCase() === email.trim().toLowerCase()) || null
   }
 
   async findByUsername(username) {
+    if (!username) return null
     const users = await this._readUsers()
-    return users.find(u => u.username.toLowerCase() === username.trim().toLowerCase()) || null
+    return users.find(u => u.username && u.username.toLowerCase() === username.trim().toLowerCase()) || null
   }
 
   async findById(id) {
+    if (!id) return null
     const users = await this._readUsers()
     return users.find(u => u.id === id) || null
   }
@@ -68,12 +71,14 @@ class UserStore {
       const newUser = {
         id: crypto.randomUUID(),
         username: userData.username.trim(),
-        email: userData.email.trim().toLowerCase(),
+        email: (userData.email || "").trim().toLowerCase(),
         passwordHash: userData.passwordHash,
         teamName: (userData.teamName || "").trim(),
-        isVerified: false,
-        verificationCode: userData.verificationCode,
-        verificationExpires: userData.verificationExpires,
+        isVerified: true,
+        verificationCode: null,
+        verificationExpires: null,
+        solvedStages: userData.solvedStages || [],
+        points: userData.points || 0,
         createdAt: new Date().toISOString(),
         lastLoginAt: null,
       }
@@ -102,6 +107,19 @@ class UserStore {
   async getAllUsersCount() {
     const users = await this._readUsers()
     return users.length
+  }
+
+  async getAllUsers() {
+    const users = await this._readUsers()
+    return users.map(u => ({
+      id: u.id,
+      username: u.username,
+      teamName: u.teamName || "",
+      points: u.points || 0,
+      solvedStages: u.solvedStages || [],
+      stageTimes: u.stageTimes || {},
+      lastSolvedAt: u.lastSolvedAt || null,
+    }))
   }
 }
 

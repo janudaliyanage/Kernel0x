@@ -69,13 +69,6 @@ export default function Hero() {
               </>
             )}
           </div>
-
-          <div className="flex items-center gap-4">
-            <div className="w-12 sm:w-16 h-1 bg-[#9dff1f]" />
-            <span className="font-mono text-gray-400 text-xs sm:text-sm">
-              SLIIT MALABE // SEP 2026 // ACCESS_LEVEL: PARTICIPANT
-            </span>
-          </div>
         </div>
       </div>
 
@@ -97,11 +90,6 @@ export default function Hero() {
             <p className="font-mono text-black/70 text-[10px] sm:text-xs uppercase font-semibold">flag format</p>
             <p className="text-black text-sm sm:text-lg font-mono font-bold">Kernel0X&#123;...&#125;</p>
           </div>
-        </div>
-
-        <div className="font-mono text-black text-xs hidden md:flex items-center gap-2 font-semibold">
-          <span className="inline-block w-2 h-2 rounded-full bg-black animate-pulse" />
-          <span>EMAIL VERIFICATION MANDATORY</span>
         </div>
       </div>
     </section>
