@@ -95,33 +95,6 @@ export default function CTFPortal() {
     }
   })
   const [copiedCiphertext, setCopiedCiphertext] = useState(false)
-  const [vigenereKeyInput, setVigenereKeyInput] = useState("")
-
-  // Standard Vigenère decryption helper for Stage 5 tester
-  const decryptVigenere = (cipher, key) => {
-    if (!cipher || !key) return ""
-    const cleanKey = key.toUpperCase().replace(/[^A-Z]/g, "")
-    if (!cleanKey) return ""
-    let result = ""
-    let keyIdx = 0
-    for (let i = 0; i < cipher.length; i++) {
-      const char = cipher[i]
-      if (char >= "A" && char <= "Z") {
-        const shift = cleanKey.charCodeAt(keyIdx % cleanKey.length) - 65
-        const dec = ((char.charCodeAt(0) - 65 - shift + 26) % 26) + 65
-        result += String.fromCharCode(dec)
-        keyIdx++
-      } else if (char >= "a" && char <= "z") {
-        const shift = cleanKey.charCodeAt(keyIdx % cleanKey.length) - 65
-        const dec = ((char.charCodeAt(0) - 97 - shift + 26) % 26) + 97
-        result += String.fromCharCode(dec)
-        keyIdx++
-      } else {
-        result += char
-      }
-    }
-    return result
-  }
 
   // Fetch operative's progress from backend database on login or user switch
   useEffect(() => {
@@ -363,42 +336,59 @@ Do not assume the first result is the answer. Follow the evidence.`
     }
   }
 
-  // Reset progress for this user (useful for re-testing)
-  const handleResetProgress = async () => {
+  // Reset progress for a specific stage or all stages (useful for re-testing)
+  const handleResetStage = async (stageId = "stage1") => {
     const token = localStorage.getItem("kernel0x_token")
     if (!token) return
 
     try {
       const res = await axios.post(
         "/api/ctf/reset",
-        {},
+        { stage: stageId },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       )
 
       if (res.data.success) {
-        setSolvedChallenges([])
-        setPoints(0)
-        setStage4Ciphertext("")
-        localStorage.removeItem("kernel0x_stage4_ciphertext")
+        const newSolved = res.data.solvedStages || []
+        setSolvedChallenges(newSolved)
+        setPoints(res.data.points || 0)
+        setFlagInput("")
+
+        if (!newSolved.includes("stage4")) {
+          setStage4Ciphertext("")
+          localStorage.removeItem("kernel0x_stage4_ciphertext")
+        }
+
+        const stageLabel = stageId.replace(/^stage(\d+)$/i, "Stage $1")
         setSubmissionStatus({
           type: "success",
-          msg: "Progress reset for your operative account. Stage 1 is now active.",
+          msg: res.data.message || `Progress reset for your operative account. ${stageLabel} is now active.`,
         })
-        // Restart the Stage 1 clock on the server, then refresh the board
-        try {
-          const prog = await axios.get("/api/ctf/progress", {
-            headers: { Authorization: `Bearer ${token}` },
-          })
-          setStageStartedAt(prog.data?.currentStageStartedAt || null)
-        } catch (e) {}
+
+        if (res.data.currentStageStartedAt) {
+          setStageStartedAt(res.data.currentStageStartedAt)
+        } else {
+          try {
+            const prog = await axios.get("/api/ctf/progress", {
+              headers: { Authorization: `Bearer ${token}` },
+            })
+            setStageStartedAt(prog.data?.currentStageStartedAt || null)
+          } catch (e) {}
+        }
         fetchLeaderboard()
       }
     } catch (err) {
       console.error("[CTF Reset Error]", err)
+      setSubmissionStatus({
+        type: "error",
+        msg: err.response?.data?.message || "Error resetting stage progress.",
+      })
     }
   }
+
+  const handleResetProgress = () => handleResetStage("stage1")
 
   const handleLogout = () => {
     logout()
@@ -870,7 +860,7 @@ Do not assume the first result is the answer. Follow the evidence.`
                           </button>
                           <button
                             type="button"
-                            onClick={handleResetProgress}
+                            onClick={() => handleResetStage("stage1")}
                             className="text-[11px] text-gray-400 hover:text-red-400 underline cursor-pointer ml-2"
                             title="Reset progress to re-test this stage"
                           >
@@ -1103,14 +1093,24 @@ Do not assume the first result is the answer. Follow the evidence.`
                               <CheckCircle className="w-5 h-5 shrink-0 text-[#9dff1f]" />
                               <span>STAGE 2 SOLVED — HIDDEN DATA RECOVERED</span>
                             </div>
-                            <button
-                              type="button"
-                              onClick={() => { setActiveTab("stage3"); setFlagInput(""); setSubmissionStatus(null); }}
-                              className="text-[11px] bg-[#9dff1f] text-black px-2.5 py-1 font-bold hover:bg-[#b0ff42] cursor-pointer"
-                            >
-                              PROCEED TO STAGE 3 &rarr;
-                            </button>
-                          </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => { setActiveTab("stage3"); setFlagInput(""); setSubmissionStatus(null); }}
+                            className="text-[11px] bg-[#9dff1f] text-black px-2.5 py-1 font-bold hover:bg-[#b0ff42] cursor-pointer"
+                          >
+                            PROCEED TO STAGE 3 &rarr;
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleResetStage("stage2")}
+                            className="text-[11px] text-gray-400 hover:text-red-400 underline cursor-pointer ml-2"
+                            title="Reset progress to re-test this stage"
+                          >
+                            [ RESET ]
+                          </button>
+                        </div>
+                      </div>
                           <p className="text-white text-xs">
                             The image contained a concealed message.
                           </p>
@@ -1234,7 +1234,7 @@ Do not assume the first result is the answer. Follow the evidence.`
                         The ciphertext does not appear to be random. Its structure suggests that Kernel0X used a simple classical substitution technique to conceal the note.
                       </p>
                       <p>
-                        You already have everything you need from Stage 2.
+                        You already have everything you need from previous stages. The numbers in the Stage 1 clue (<span className="text-[#9dff1f] font-bold">K0X-17</span>) are needed to decode the cipher.
                       </p>
                       <p>
                         Decode the recovered ciphertext and uncover the message left by Kernel0X.
@@ -1253,7 +1253,7 @@ Do not assume the first result is the answer. Follow the evidence.`
                         </code>
                       </div>
                       <p className="text-gray-400 text-[11px] mt-2">
-                        No new file is required for this stage. Decode this recovered ciphertext.
+                        No new file is required for this stage. Decode this recovered ciphertext using the numbers from the Stage 1 clue.
                       </p>
                     </div>
 
@@ -1282,7 +1282,7 @@ Do not assume the first result is the answer. Follow the evidence.`
                           </div>
                           {stage3Hint1Revealed && (
                             <p className="mt-2 text-white pt-2 border-t border-[#1c231d] text-xs leading-relaxed">
-                              "The letters appear to have been shifted by the same amount."
+                              "The letters appear to have been shifted by the same amount. Remember that the numbers in the Stage 1 clue (K0X-17) are needed to decode the cipher."
                             </p>
                           )}
                         </div>
@@ -1301,7 +1301,7 @@ Do not assume the first result is the answer. Follow the evidence.`
                           </div>
                           {stage3Hint2Revealed && (
                             <p className="mt-2 text-white pt-2 border-t border-[#1c231d] text-xs leading-relaxed">
-                              "Try a Caesar cipher and test different shift values."
+                              "The correct shift is 7 positions backward. Apply a Caesar Cipher Decode using a shift of -7."
                             </p>
                           )}
                         </div>
@@ -1317,13 +1317,23 @@ Do not assume the first result is the answer. Follow the evidence.`
                               <CheckCircle className="w-5 h-5 shrink-0 text-[#9dff1f]" />
                               <span>STAGE 3 SOLVED — THE ENCRYPTED NOTE HAS BEEN DECODED</span>
                             </div>
-                            <button
-                              type="button"
-                              onClick={() => { setActiveTab("stage4"); setFlagInput(""); setSubmissionStatus(null); }}
-                              className="text-[11px] bg-[#9dff1f] text-black px-2.5 py-1 font-bold hover:bg-[#b0ff42] cursor-pointer"
-                            >
-                              PROCEED TO STAGE 4 &rarr;
-                            </button>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => { setActiveTab("stage4"); setFlagInput(""); setSubmissionStatus(null); }}
+                            className="text-[11px] bg-[#9dff1f] text-black px-2.5 py-1 font-bold hover:bg-[#b0ff42] cursor-pointer"
+                          >
+                            PROCEED TO STAGE 4 &rarr;
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleResetStage("stage3")}
+                            className="text-[11px] text-gray-400 hover:text-red-400 underline cursor-pointer ml-2"
+                            title="Reset progress to re-test this stage"
+                          >
+                            [ RESET ]
+                          </button>
+                        </div>
                           </div>
                           <p className="text-white text-xs">
                             The encrypted note has been successfully decoded.
@@ -1710,7 +1720,7 @@ Do not assume the first result is the answer. Follow the evidence.`
                     <div className="flex flex-wrap items-center justify-between gap-2 mb-4 pb-4 border-b border-[#1c231d]">
                       <div className="flex items-center gap-2 font-mono text-xs text-[#9dff1f]">
                         <Terminal className="w-4 h-4" />
-                        <span>CATEGORY: CRYPTOGRAPHY / VIGENÈRE CIPHER</span>
+                        <span>CATEGORY: CRYPTOGRAPHY</span>
                       </div>
                       <div className="flex items-center gap-3">
                         <span className="font-mono text-xs text-gray-400">
@@ -1864,62 +1874,7 @@ Do not assume the first result is the answer. Follow the evidence.`
                       </div>
                     </div>
 
-                    {/* Vigenère Decrypt Assistant (Interactive Helper) */}
-                    <div className="border border-[#1c231d] bg-[#070907] p-4 sm:p-5 mb-6 font-mono text-xs">
-                      <div className="text-[#9dff1f] font-bold mb-2">// VIGENÈRE DECRYPT TESTER (OPTIONAL HELPER):</div>
-                      <p className="text-gray-400 text-[11px] mb-3">
-                        Test candidate keys derived from the Stage 4 hostname against the recovered ciphertext.
-                      </p>
-                      <div className="flex flex-col sm:flex-row gap-2 mb-3">
-                        <input
-                          type="text"
-                          value={vigenereKeyInput}
-                          onChange={(e) => setVigenereKeyInput(e.target.value)}
-                          placeholder="Enter derived key (e.g. from hostname)..."
-                          className="flex-1 bg-[#0c100c] border border-[#1c231d] focus:border-[#9dff1f] text-[#9dff1f] px-3 py-2 outline-none"
-                        />
-                        {vigenereKeyInput && (
-                          <button
-                            type="button"
-                            onClick={() => setVigenereKeyInput("")}
-                            className="px-3 py-2 bg-[#141a12] border border-[#1c231d] text-gray-400 hover:text-white cursor-pointer"
-                          >
-                            CLEAR
-                          </button>
-                        )}
-                      </div>
-                      {vigenereKeyInput.trim() && (() => {
-                        const activeCipher = stage4Ciphertext || "OTRKL5_TFSK=Geirlz0R{oeneysbgy9_nmceeiys}|MLECE6_YSZH=mlece6|JXHUY6_HVKTFGVZ=MKL|OTRKL6_IMWVJADI=r0l_ihinaksy|GNSKA6_PRWZKIJH=Jeoe@2026!"
-                        const decrypted = decryptVigenere(activeCipher, vigenereKeyInput)
-                        const isCorrectKey = decrypted.includes("STAGE5_FLAG=Kernel0X{warehouse9_vigenere}")
-                        return (
-                          <div className={`p-3 border ${isCorrectKey ? "bg-[#10190e] border-[#9dff1f]" : "bg-[#111410] border-[#1c231d]"}`}>
-                            <div className="text-[11px] text-gray-400 mb-1">DECRYPTED OUTPUT:</div>
-                            <div className="break-all font-mono text-xs text-white mb-2">{decrypted}</div>
-                            {isCorrectKey && (
-                              <div className="pt-2 border-t border-[#9dff1f]/30 space-y-1.5 text-[11px]">
-                                <div className="text-[#9dff1f] font-bold flex items-center justify-between">
-                                  <span>RECOVERED FLAG: Kernel0X&#123;warehouse9_vigenere&#125;</span>
-                                  <button
-                                    type="button"
-                                    onClick={() => setFlagInput("Kernel0X{warehouse9_vigenere}")}
-                                    className="text-[10px] bg-[#9dff1f] text-black px-2 py-0.5 font-bold hover:bg-[#b0ff42] cursor-pointer"
-                                  >
-                                    [ USE IN SUBMISSION ]
-                                  </button>
-                                </div>
-                                <div className="mt-1 p-2 bg-[#0a0f08] border border-amber-400/40 text-amber-400 text-[11px]">
-                                  ⚠ INTELLIGENCE NOTE: This flag is also your Stage 6 SSH password. Keep it ready.
-                                </div>
-                                <div className="text-gray-300">
-                                  Stage 6 — Kernel0X's Final Message has been unlocked. Proceed to the next stage.
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        )
-                      })()}
-                    </div>
+
 
                     {/* Solved Status & Answer Submission Form */}
                     <div className="pt-4 border-t border-[#1c231d]">
@@ -1930,13 +1885,23 @@ Do not assume the first result is the answer. Follow the evidence.`
                               <CheckCircle className="w-5 h-5 shrink-0 text-[#9dff1f]" />
                               <span>STAGE 5 SOLVED — THE SECOND CIPHER DECODED</span>
                             </div>
-                            <button
-                              type="button"
-                              onClick={() => { setActiveTab("stage6"); setFlagInput(""); setSubmissionStatus(null); }}
-                              className="text-[11px] bg-[#9dff1f] text-black px-2.5 py-1 font-bold hover:bg-[#b0ff42] cursor-pointer"
-                            >
-                              PROCEED TO STAGE 6 &rarr;
-                            </button>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => { setActiveTab("stage6"); setFlagInput(""); setSubmissionStatus(null); }}
+                            className="text-[11px] bg-[#9dff1f] text-black px-2.5 py-1 font-bold hover:bg-[#b0ff42] cursor-pointer"
+                          >
+                            PROCEED TO STAGE 6 &rarr;
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleResetStage("stage5")}
+                            className="text-[11px] text-gray-400 hover:text-red-400 underline cursor-pointer ml-2"
+                            title="Reset progress to re-test this stage"
+                          >
+                            [ RESET ]
+                          </button>
+                        </div>
                           </div>
                           <p className="text-white text-xs">
                             The encrypted message has been successfully decrypted.

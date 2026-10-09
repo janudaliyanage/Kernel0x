@@ -247,7 +247,7 @@ def create_document():
         [
             "Introduce yourself clearly on webcam with your full name and Student ID (ITxxxxxxx).",
             "Stage 3: Show ciphertext 'Rlyuls0E{jhlzhy_pz_jshzzpj}' in portal. Run stage3_caesar_solver.py live.",
-            "Demonstrate shift 7 (ROT-7) decoding to 'Kernel0X{caesar_is_classic}'. Submit flag to unlock Stage 4.",
+            "Explain that the numbers in the Stage 1 clue ('K0X-17') provide the key (shift 7 / ROT-7) needed to decode the cipher to 'Kernel0X{caesar_is_classic}'. Submit flag to unlock Stage 4.",
             "Stage 4: Download exfil-capture.pcap (1.7 KB). Open in Wireshark.",
             "Apply Wireshark filter 'ftp || ftp-data'. Follow TCP Stream on port 21 to find hostname 'ftp.warehouse9.nexalabs.local'.",
             "Follow TCP Stream on port 20 (FTP-DATA) to inspect transferred ciphertext.",
@@ -256,7 +256,7 @@ def create_document():
         ],
         [
             ("09:00 – 09:45", "Stage 3: Classical Cryptography & Caesar Solver (LO2, LO3)",
-             "Hello, my name is [Member 2 Name], Student ID [ITxxxxxxx]. I am responsible for Challenge Design A, covering Stage 3: The Encrypted Note and Stage 4: The Exfiltration Trail. Stage 3 transitions the breach investigation to classical cryptanalysis. The payload from Stage 2—Rlyuls0E{jhlzhy_pz_jshzzpj}—retains flag punctuation and casing. To solve this, I wrote an automated Caesar shift solver in Python: stage3_caesar_solver.py. It iterates through all 25 substitution offsets and applies regex matching for 'Kernel0X{.*}'. Running the script live, shift value 7 (ROT-7) cleanly recovers the plaintext flag: Kernel0X{caesar_is_classic}. Submitting this flag completes Stage 3 and unlocks Stage 4."),
+             "Hello, my name is [Member 2 Name], Student ID [ITxxxxxxx]. I am responsible for Challenge Design A, covering Stage 3: The Encrypted Note and Stage 4: The Exfiltration Trail. Stage 3 transitions the breach investigation to classical cryptanalysis. The payload from Stage 2—Rlyuls0E{jhlzhy_pz_jshzzpj}—retains flag punctuation and casing. Importantly, the numbers in the Stage 1 clue—K0X-17—are needed to decode the cipher: the trailing number 17 gives us our shift offset of 7 positions. To solve this, I wrote an automated Caesar shift solver in Python: stage3_caesar_solver.py. Applying the shift value 7 derived from the Stage 1 clue, the script cleanly recovers the plaintext flag: Kernel0X{caesar_is_classic}. Submitting this flag completes Stage 3 and unlocks Stage 4."),
             ("09:45 – 11:15", "Stage 4: Network Traffic Forensics in Wireshark (LO1, LO2)",
              "Moving into Stage 4: Network Forensics. The scenario states that the attacker exfiltrated staging data over an insecure protocol. We download the packet capture exfil-capture.pcap. Opening the capture in Wireshark, we filter out background DNS, ARP, and HTTP noise using the display filter: 'ftp || ftp-data'. Examining the FTP control conversation on TCP port 21 by following the TCP stream, we observe the client authentication and note a critical infrastructure clue: the server banner identifies the hostname as 'ftp.warehouse9.nexalabs.local'. Next, following the corresponding FTP-DATA stream on port 20, we reconstruct the transferred file content, which contains an encrypted string beginning with 'OTRKL5_TFSK=...'."),
             ("11:15 – 12:30", "Self-Developed PCAP Stream Parser & Bridge (LO3)",
@@ -271,7 +271,7 @@ def create_document():
         [
             "Introduce yourself clearly on webcam with your full name and Student ID (ITxxxxxxx).",
             "In portal, navigate to Stage 5: The Second Cipher. Show that ciphertext was passed from Stage 4.",
-            "Demonstrate the interactive Vigenère tester with key 'WAREHOUSE'.",
+            "Explain Vigenère key derivation from the Stage 4 hostname (WAREHOUSE).",
             "Run self-developed Python solver script stage5_vigenere_solver.py in terminal.",
             "Submit recovered flag 'Kernel0X{warehouse9_vigenere}'.",
             "Highlight the crucial intelligence notice: 'This flag is also your Stage 6 SSH password'."
@@ -355,21 +355,26 @@ if __name__ == "__main__":
 
         ("Script 3: Stage 3 Caesar Cipher Decryptor (Member 2)", "Python 3", """import re
 
-def solve_caesar(ciphertext="Rlyuls0E{jhlzhy_pz_jshzzpj}"):
+# Stage 3 Caesar Cipher Decryptor
+# Note: The numbers in the Stage 1 clue ('K0X-17') provide the key needed to decode this cipher (Shift = 7)
+def solve_caesar(ciphertext="Rlyuls0E{jhlzhy_pz_jshzzpj}", clue_code="K0X-17"):
     print(f"[*] Analyzing Ciphertext: {ciphertext}")
-    for shift in range(1, 26):
-        decoded = []
-        for ch in ciphertext:
-            if 'a' <= ch <= 'z':
-                decoded.append(chr((ord(ch) - 97 - shift) % 26 + 97))
-            elif 'A' <= ch <= 'Z':
-                decoded.append(chr((ord(ch) - 65 - shift) % 26 + 65))
-            else:
-                decoded.append(ch)
-        res = "".join(decoded)
-        if re.search(r"Kernel0X\{.*\}", res):
-            print(f"[+] MATCH FOUND (Shift {shift}): {res}")
-            return res
+    # Extract shift offset from Stage 1 clue numbers (17 -> offset 7)
+    shift = int(re.findall(r'\\d+', clue_code)[-1]) % 10  # 17 -> 7
+    print(f"[*] Stage 1 Clue Reference: '{clue_code}' -> Extracted Shift Offset: {shift}")
+    
+    decoded = []
+    for ch in ciphertext:
+        if 'a' <= ch <= 'z':
+            decoded.append(chr((ord(ch) - 97 - shift) % 26 + 97))
+        elif 'A' <= ch <= 'Z':
+            decoded.append(chr((ord(ch) - 65 - shift) % 26 + 65))
+        else:
+            decoded.append(ch)
+    res = "".join(decoded)
+    if re.search(r"Kernel0X\\{.*\\}", res):
+        print(f"[+] SUCCESS (Decoded using Stage 1 clue shift {shift}): {res}")
+        return res
     return None
 
 if __name__ == "__main__":
