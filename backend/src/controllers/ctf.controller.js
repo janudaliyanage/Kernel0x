@@ -230,10 +230,48 @@ export async function resetProgress(req, res) {
       return res.status(404).json({ success: false, message: "User not found" })
     }
 
+    const { stage } = req.body || {}
+    if (stage && STAGE_ORDER.includes(stage)) {
+      const targetIndex = STAGE_ORDER.indexOf(stage)
+      const stagesToKeep = STAGE_ORDER.slice(0, targetIndex)
+      const newSolvedStages = (user.solvedStages || []).filter(s => stagesToKeep.includes(s))
+
+      const newStageTimes = {}
+      let newPoints = 0
+      for (const s of newSolvedStages) {
+        if (user.stageTimes && user.stageTimes[s]) {
+          newStageTimes[s] = user.stageTimes[s]
+          newPoints += user.stageTimes[s].xp || STAGE_CONFIG[s]?.points || 150
+        } else {
+          newPoints += STAGE_CONFIG[s]?.points || 150
+        }
+      }
+
+      const now = new Date().toISOString()
+      newStageTimes[stage] = { startedAt: now }
+
+      await userStore.updateUser(user.id, {
+        solvedStages: newSolvedStages,
+        points: newPoints,
+        stageTimes: newStageTimes,
+        lastSolvedAt: newSolvedStages.length > 0 ? user.lastSolvedAt : null,
+      })
+
+      return res.json({
+        success: true,
+        message: `${stage.toUpperCase()} progress reset. You can now re-test this stage.`,
+        solvedStages: newSolvedStages,
+        points: newPoints,
+        currentStage: stage,
+        currentStageStartedAt: now,
+      })
+    }
+
+    const now = new Date().toISOString()
     await userStore.updateUser(user.id, {
       solvedStages: [],
       points: 0,
-      stageTimes: {},
+      stageTimes: { stage1: { startedAt: now } },
       lastSolvedAt: null,
     })
 
@@ -242,6 +280,8 @@ export async function resetProgress(req, res) {
       message: "Operative progress reset.",
       solvedStages: [],
       points: 0,
+      currentStage: "stage1",
+      currentStageStartedAt: now,
     })
   } catch (err) {
     console.error("[resetProgress Error]", err)
