@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 750" width="940" height="750">
+  <defs>
+    <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#9dff1f" flood-opacity="0.5"/>
+    </filter>
+    <filter id="card-shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000000" flood-opacity="0.8"/>
+    </filter>
+    <linearGradient id="header-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#9dff1f" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#9dff1f" stop-opacity="0.02"/>
+    </linearGradient>
+    <linearGradient id="accent-bar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#9dff1f"/>
+      <stop offset="50%" stop-color="#70cc00"/>
+      <stop offset="100%" stop-color="#1c2b1b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Outer background -->
+  <rect width="940" height="750" fill="#060906" rx="14"/>
+
+  <!-- Main Card Container -->
+  <rect x="15" y="15" width="910" height="720" rx="10" fill="#0a0f0a" stroke="#1f2d1e" stroke-width="1.5" filter="url(#card-shadow)"/>
+  
+  <!-- Corner Accent Lines (Cyber aesthetic) -->
+  <path d="M 15 45 L 15 15 L 45 15" stroke="#9dff1f" stroke-width="3" fill="none"/>
+  <path d="M 925 45 L 925 15 L 895 15" stroke="#9dff1f" stroke-width="3" fill="none"/>
+  <path d="M 15 705 L 15 735 L 45 735" stroke="#9dff1f" stroke-width="3" fill="none"/>
+  <path d="M 925 705 L 925 735 L 895 735" stroke="#9dff1f" stroke-width="3" fill="none"/>
+
+  <!-- Top Title Bar -->
+  <text x="40" y="62" fill="#ffffff" font-family="'Consolas', 'Courier New', monospace" font-size="28" font-weight="900" letter-spacing="1.5">
+    4. CRACK THE CODE <tspan fill="#9dff1f">— 9 LETTERS</tspan>
+  </text>
+  <line x1="40" y1="82" x2="900" y2="82" stroke="url(#accent-bar)" stroke-width="2"/>
+
+  <!-- Table Header Bar -->
+  <rect x="40" y="105" width="470" height="48" fill="#111a11" stroke="#253823" stroke-width="1.5"/>
+  <text x="275" y="136" fill="#9dff1f" font-family="'Consolas', 'Courier New', monospace" font-size="16" font-weight="bold" text-anchor="middle" letter-spacing="2">
+    YOUR GUESS
+  </text>
+
+  <rect x="510" y="105" width="390" height="48" fill="#111a11" stroke="#253823" stroke-width="1.5"/>
+  <text x="705" y="136" fill="#9dff1f" font-family="'Consolas', 'Courier New', monospace" font-size="16" font-weight="bold" text-anchor="middle" letter-spacing="2">
+    CLUE
+  </text>
+
+  <!-- Puzzle Rows -->
+  
+      <!-- Row 1 -->
+      <rect x="40" y="160" width="860" height="72" fill="#0a0f0a" stroke="#1c2b1b" stroke-width="1"/>
+      
+        <rect x="60" y="170" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="82" y="202" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">H</text>
+        <rect x="110" y="170" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="132" y="202" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">O</text>
+        <rect x="160" y="170" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="182" y="202" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">U</text>
+        <rect x="210" y="170" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="232" y="202" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">S</text>
+        <rect x="260" y="170" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="282" y="202" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">E</text>
+        <rect x="310" y="170" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="332" y="202" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">W</text>
+        <rect x="360" y="170" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="382" y="202" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">A</text>
+        <rect x="410" y="170" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="432" y="202" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">R</text>
+        <rect x="460" y="170" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="482" y="202" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">E</text>
+      <text x="535" y="202" fill="#e2e8f0" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500">
+        7 letters present, all wrongly placed
+      </text>
+    
+      <!-- Row 2 -->
+      <rect x="40" y="232" width="860" height="72" fill="#0d130d" stroke="#1c2b1b" stroke-width="1"/>
+      
+        <rect x="60" y="242" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="82" y="274" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">S</text>
+        <rect x="110" y="242" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="132" y="274" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">O</text>
+        <rect x="160" y="242" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="182" y="274" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">M</text>
+        <rect x="210" y="242" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="232" y="274" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">E</text>
+        <rect x="260" y="242" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="282" y="274" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">W</text>
+        <rect x="310" y="242" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="332" y="274" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">H</text>
+        <rect x="360" y="242" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="382" y="274" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">E</text>
+        <rect x="410" y="242" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="432" y="274" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">R</text>
+        <rect x="460" y="242" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="482" y="274" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">E</text>
+      <text x="535" y="274" fill="#e2e8f0" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500">
+        5 letters present, 2 correctly placed
+      </text>
+    
+      <!-- Row 3 -->
+      <rect x="40" y="304" width="860" height="72" fill="#0a0f0a" stroke="#1c2b1b" stroke-width="1"/>
+      
+        <rect x="60" y="314" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="82" y="346" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">H</text>
+        <rect x="110" y="314" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="132" y="346" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">O</text>
+        <rect x="160" y="314" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="182" y="346" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">U</text>
+        <rect x="210" y="314" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="232" y="346" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">S</text>
+        <rect x="260" y="314" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="282" y="346" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">E</text>
+        <rect x="310" y="314" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="332" y="346" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">S</text>
+        <rect x="360" y="314" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="382" y="346" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">A</text>
+        <rect x="410" y="314" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="432" y="346" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">R</text>
+        <rect x="460" y="314" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="482" y="346" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">E</text>
+      <text x="535" y="346" fill="#e2e8f0" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500">
+        6 letters present, 1 correctly placed
+      </text>
+    
+      <!-- Row 4 -->
+      <rect x="40" y="376" width="860" height="72" fill="#0d130d" stroke="#1c2b1b" stroke-width="1"/>
+      
+        <rect x="60" y="386" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="82" y="418" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">W</text>
+        <rect x="110" y="386" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="132" y="418" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">A</text>
+        <rect x="160" y="386" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="182" y="418" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">R</text>
+        <rect x="210" y="386" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="232" y="418" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">E</text>
+        <rect x="260" y="386" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="282" y="418" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">S</text>
+        <rect x="310" y="386" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="332" y="418" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">O</text>
+        <rect x="360" y="386" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="382" y="418" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">U</text>
+        <rect x="410" y="386" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="432" y="418" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">T</text>
+        <rect x="460" y="386" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="482" y="418" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">H</text>
+      <text x="535" y="418" fill="#e2e8f0" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500">
+        7 letters present, 3 correctly placed
+      </text>
+    
+      <!-- Row 5 -->
+      <rect x="40" y="448" width="860" height="72" fill="#0a0f0a" stroke="#1c2b1b" stroke-width="1"/>
+      
+        <rect x="60" y="458" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="82" y="490" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">S</text>
+        <rect x="110" y="458" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="132" y="490" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">H</text>
+        <rect x="160" y="458" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="182" y="490" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">A</text>
+        <rect x="210" y="458" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="232" y="490" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">R</text>
+        <rect x="260" y="458" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="282" y="490" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">E</text>
+        <rect x="310" y="458" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="332" y="490" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">W</text>
+        <rect x="360" y="458" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="382" y="490" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">O</text>
+        <rect x="410" y="458" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="432" y="490" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">R</text>
+        <rect x="460" y="458" width="44" height="50" rx="4" fill="#131c13" stroke="#2a3d28" stroke-width="1.5"/>
+        <text x="482" y="490" fill="#9dff1f" font-family="'Courier New', Consolas, monospace" font-size="24" font-weight="bold" text-anchor="middle">E</text>
+      <text x="535" y="490" fill="#e2e8f0" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="16" font-weight="500">
+        6 letters present, 2 correctly placed
+      </text>
+    
+
+  <!-- Bottom Final Word Box -->
+  <g transform="translate(0, 0)">
+    <text x="60" y="542" fill="#9dff1f" font-family="'Consolas', 'Courier New', monospace" font-size="16" font-weight="bold" letter-spacing="2">
+      FINAL WORD (9 LETTERS)
+    </text>
+    
+      <rect x="60" y="560" width="44" height="50" rx="4" fill="#0d140d" stroke="#9dff1f" stroke-width="2" stroke-dasharray="4,3"/>
+      <line x1="68" y1="600" x2="96" y2="600" stroke="#9dff1f" stroke-width="2" stroke-opacity="0.6"/>
+      <rect x="110" y="560" width="44" height="50" rx="4" fill="#0d140d" stroke="#9dff1f" stroke-width="2" stroke-dasharray="4,3"/>
+      <line x1="118" y1="600" x2="146" y2="600" stroke="#9dff1f" stroke-width="2" stroke-opacity="0.6"/>
+      <rect x="160" y="560" width="44" height="50" rx="4" fill="#0d140d" stroke="#9dff1f" stroke-width="2" stroke-dasharray="4,3"/>
+      <line x1="168" y1="600" x2="196" y2="600" stroke="#9dff1f" stroke-width="2" stroke-opacity="0.6"/>
+      <rect x="210" y="560" width="44" height="50" rx="4" fill="#0d140d" stroke="#9dff1f" stroke-width="2" stroke-dasharray="4,3"/>
+      <line x1="218" y1="600" x2="246" y2="600" stroke="#9dff1f" stroke-width="2" stroke-opacity="0.6"/>
+      <rect x="260" y="560" width="44" height="50" rx="4" fill="#0d140d" stroke="#9dff1f" stroke-width="2" stroke-dasharray="4,3"/>
+      <line x1="268" y1="600" x2="296" y2="600" stroke="#9dff1f" stroke-width="2" stroke-opacity="0.6"/>
+      <rect x="310" y="560" width="44" height="50" rx="4" fill="#0d140d" stroke="#9dff1f" stroke-width="2" stroke-dasharray="4,3"/>
+      <line x1="318" y1="600" x2="346" y2="600" stroke="#9dff1f" stroke-width="2" stroke-opacity="0.6"/>
+      <rect x="360" y="560" width="44" height="50" rx="4" fill="#0d140d" stroke="#9dff1f" stroke-width="2" stroke-dasharray="4,3"/>
+      <line x1="368" y1="600" x2="396" y2="600" stroke="#9dff1f" stroke-width="2" stroke-opacity="0.6"/>
+      <rect x="410" y="560" width="44" height="50" rx="4" fill="#0d140d" stroke="#9dff1f" stroke-width="2" stroke-dasharray="4,3"/>
+      <line x1="418" y1="600" x2="446" y2="600" stroke="#9dff1f" stroke-width="2" stroke-opacity="0.6"/>
+      <rect x="460" y="560" width="44" height="50" rx="4" fill="#0d140d" stroke="#9dff1f" stroke-width="2" stroke-dasharray="4,3"/>
+      <line x1="468" y1="600" x2="496" y2="600" stroke="#9dff1f" stroke-width="2" stroke-opacity="0.6"/>
+
+    <!-- Cyber Padlock Icon -->
+    <g transform="translate(680, 532)" filter="url(#neon-glow)">
+      <!-- Shackle -->
+      <path d="M 30 35 L 30 22 C 30 10, 50 10, 50 22 L 50 35" fill="none" stroke="#9dff1f" stroke-width="5" stroke-linecap="round"/>
+      <!-- Lock Body -->
+      <rect x="18" y="32" width="44" height="46" rx="6" fill="#0f170f" stroke="#9dff1f" stroke-width="2.5"/>
+      <!-- Combination Dials -->
+      <rect x="25" y="40" width="12" height="12" rx="2" fill="#182618" stroke="#9dff1f" stroke-width="1"/>
+      <text x="31" y="49" fill="#9dff1f" font-family="monospace" font-size="9" font-weight="bold" text-anchor="middle">1</text>
+
+      <rect x="43" y="40" width="12" height="12" rx="2" fill="#182618" stroke="#9dff1f" stroke-width="1"/>
+      <text x="49" y="49" fill="#9dff1f" font-family="monospace" font-size="9" font-weight="bold" text-anchor="middle">2</text>
+
+      <rect x="25" y="56" width="12" height="12" rx="2" fill="#182618" stroke="#9dff1f" stroke-width="1"/>
+      <text x="31" y="65" fill="#9dff1f" font-family="monospace" font-size="9" font-weight="bold" text-anchor="middle">3</text>
+
+      <rect x="43" y="56" width="12" height="12" rx="2" fill="#182618" stroke="#9dff1f" stroke-width="1"/>
+      <text x="49" y="65" fill="#9dff1f" font-family="monospace" font-size="9" font-weight="bold" text-anchor="middle">4</text>
+    </g>
+
+    <text x="60" y="640" fill="#64748b" font-family="'Consolas', 'Courier New', monospace" font-size="13">
+      [ KEY DEDUCTION: Cross-reference with Stage 4 FTP hostname ]
+    </text>
+  </g>
+</svg>

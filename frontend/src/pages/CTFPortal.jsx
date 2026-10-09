@@ -24,7 +24,8 @@ import {
   Copy,
   Sparkles,
   Trophy,
-  X
+  X,
+  Key
 } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
 import { useSearch } from "@/context/SearchContext"
@@ -72,6 +73,8 @@ export default function CTFPortal() {
   const [stage6Hint6Revealed, setStage6Hint6Revealed] = useState(false)
   const [copiedSshCmd, setCopiedSshCmd] = useState(false)
   const [showCelebrationModal, setShowCelebrationModal] = useState(false)
+  const [puzzleKeyGuess, setPuzzleKeyGuess] = useState("")
+  const [copiedKey, setCopiedKey] = useState(false)
 
   // Status flags
   const isStage1Solved = solvedChallenges.includes("stage1")
@@ -1753,6 +1756,95 @@ Do not assume the first result is the answer. Follow the evidence.`
                       <p className="text-amber-400/90 font-semibold">
                         You already have the ciphertext from Stage 4. No new file is required.
                       </p>
+                    </div>
+
+                    {/* Vigenère Cipher Key Puzzle */}
+                    <div className="border border-[#1c231d] bg-[#070907] p-4 sm:p-5 mb-6 font-mono text-xs">
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 border-b border-[#1c231d]">
+                        <div className="flex items-center gap-2 text-[#9dff1f] font-bold text-xs sm:text-sm">
+                          <Key className="w-4 h-4 text-[#9dff1f]" />
+                          <span>// CRACK THE CODE — FIND THE VIGENÈRE KEY (9 LETTERS)</span>
+                        </div>
+                        <span className="text-gray-500 text-[10px] uppercase tracking-wider">
+                          Key Deduction Puzzle
+                        </span>
+                      </div>
+
+                      <p className="text-gray-300 text-xs mb-4 leading-relaxed">
+                        To uncover the Vigenère cipher key, Kernel0X left this 9-letter deduction puzzle. Compare the guessed words with their position clues to deduce the secret key:
+                      </p>
+
+                      {/* Puzzle Image Container */}
+                      <div className="bg-[#080d08] border border-[#1c231d] p-3 sm:p-4 mb-4 flex flex-col items-center">
+                        <div className="relative max-w-xl w-full overflow-hidden border border-[#232f22] shadow-[0_0_35px_rgba(0,0,0,0.85)] rounded bg-[#070a07]">
+                          <img
+                            src="/challenges/stage5/vigenere-puzzle.png"
+                            alt="Crack The Code — 9 Letters Puzzle"
+                            className="w-full h-auto object-contain block hover:brightness-105 transition-all cursor-pointer"
+                            onClick={() => window.open("/challenges/stage5/vigenere-puzzle.png", "_blank")}
+                            title="Click to view full image in a new tab"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Interactive Key Verification Box */}
+                      <div className="p-3.5 bg-[#0d120d] border border-[#1c231d] space-y-2">
+                        <label className="block text-[11px] text-gray-300 font-semibold tracking-wide">
+                          TEST YOUR 9-LETTER KEY GUESS:
+                        </label>
+                        <div className="flex flex-col sm:flex-row gap-2">
+                          <input
+                            type="text"
+                            maxLength={9}
+                            value={puzzleKeyGuess}
+                            onChange={(e) => setPuzzleKeyGuess(e.target.value.toUpperCase())}
+                            placeholder="ENTER 9-LETTER WORD..."
+                            className="flex-1 bg-[#070907] border border-[#1c231d] focus:border-[#9dff1f] text-[#9dff1f] px-3 py-2 font-mono text-sm tracking-widest outline-none uppercase font-bold"
+                          />
+                          {puzzleKeyGuess && (
+                            <button
+                              type="button"
+                              onClick={() => setPuzzleKeyGuess("")}
+                              className="px-3 py-2 bg-[#141a12] border border-[#1c231d] text-gray-400 hover:text-white cursor-pointer text-xs"
+                            >
+                              CLEAR
+                            </button>
+                          )}
+                        </div>
+
+                        {puzzleKeyGuess.length > 0 && (
+                          <div className="pt-1">
+                            {puzzleKeyGuess === "WAREHOUSE" ? (
+                              <div className="p-2.5 bg-[#10190e] border border-[#9dff1f] text-[#9dff1f] text-xs flex items-center justify-between gap-2">
+                                <div className="flex items-center gap-1.5 font-bold">
+                                  <CheckCircle className="w-4 h-4 shrink-0 text-[#9dff1f]" />
+                                  <span>KEY CRACKED: "WAREHOUSE" (9 letters) — Use this key to decrypt the Vigenère ciphertext below!</span>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    navigator.clipboard.writeText("WAREHOUSE")
+                                    setCopiedKey(true)
+                                    setTimeout(() => setCopiedKey(false), 2000)
+                                  }}
+                                  className="text-[10px] bg-[#9dff1f] text-black px-2.5 py-1 font-bold hover:bg-[#b0ff42] cursor-pointer shrink-0"
+                                >
+                                  {copiedKey ? "[ COPIED! ]" : "[ COPY KEY ]"}
+                                </button>
+                              </div>
+                            ) : puzzleKeyGuess.length === 9 ? (
+                              <div className="p-2 bg-[#190e0e] border border-red-500/50 text-red-400 text-xs flex items-center gap-1.5">
+                                <AlertCircle className="w-4 h-4 shrink-0" />
+                                <span>Incorrect key. Study the letter placements in the puzzle and compare with the Stage 4 hostname.</span>
+                              </div>
+                            ) : (
+                              <div className="text-[11px] text-gray-500 font-mono">
+                                {9 - puzzleKeyGuess.length} letter{9 - puzzleKeyGuess.length > 1 ? "s" : ""} remaining ({puzzleKeyGuess.length}/9)...
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
 
                     {/* Recovered Ciphertext Banner (Passed directly from Stage 4) */}

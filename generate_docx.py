@@ -271,14 +271,14 @@ def create_document():
         [
             "Introduce yourself clearly on webcam with your full name and Student ID (ITxxxxxxx).",
             "In portal, navigate to Stage 5: The Second Cipher. Show that ciphertext was passed from Stage 4.",
-            "Explain Vigenère key derivation from the Stage 4 hostname (WAREHOUSE).",
+            "Explain Vigenère key derivation from the Stage 4 hostname and the 9-letter code deduction puzzle (WAREHOUSE).",
             "Run self-developed Python solver script stage5_vigenere_solver.py in terminal.",
             "Submit recovered flag 'Kernel0X{warehouse9_vigenere}'.",
             "Highlight the crucial intelligence notice: 'This flag is also your Stage 6 SSH password'."
         ],
         [
             ("12:30 – 13:15", "Polyalphabetic Decryption & Key Derivation",
-             "Welcome back. I am [Member 3], presenting Stage 5: The Second Cipher, representing our advanced cryptography component. Unlike the monoalphabetic cipher in Stage 3, Stage 5 implements a polyalphabetic Vigenère cipher. Notice that our platform automatically loaded the exfiltrated ciphertext from Stage 4. Recall the hostname discovered by Member 2 in the FTP control traffic: ftp.warehouse9.nexalabs.local. The distinct keyword identifying this server is 'WAREHOUSE'. We test this keyword as our repeating Vigenère decryption key."),
+             "Welcome back. I am [Member 3], presenting Stage 5: The Second Cipher, representing our advanced cryptography component. Unlike the monoalphabetic cipher in Stage 3, Stage 5 implements a polyalphabetic Vigenère cipher. Notice that our platform automatically loaded the exfiltrated ciphertext from Stage 4. Recall the hostname discovered by Member 2 in the FTP control traffic: ftp.warehouse9.nexalabs.local. Furthermore, our portal presents a 9-letter word deduction puzzle—Crack The Code—confirming the exact keyword: 'WAREHOUSE'. We test this keyword as our repeating Vigenère decryption key."),
             ("13:15 – 14:15", "Mathematical Decryption & Python Solver (LO3)",
              "To automate this stage, I authored stage5_vigenere_solver.py in Python. The script implements modular subtraction: Pi = (Ci - Ki) mod 26 across uppercase and lowercase character ranges while preserving non-alphabetic formatting. When we run the script with key 'WAREHOUSE', the ciphertext decrypts into structured key-value parameters: STAGE5_FLAG=Kernel0X{warehouse9_vigenere}. Our recovered flag is Kernel0X{warehouse9_vigenere}."),
             ("14:15 – 15:00", "Submission & Stage 6 Credential Pivot",
