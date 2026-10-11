@@ -75,6 +75,9 @@ export default function CTFPortal() {
   const [showCelebrationModal, setShowCelebrationModal] = useState(false)
   const [puzzleKeyGuess, setPuzzleKeyGuess] = useState("")
   const [copiedKey, setCopiedKey] = useState(false)
+  const [stage3LockGuess, setStage3LockGuess] = useState("")
+  const [copiedStage3Lock, setCopiedStage3Lock] = useState(false)
+  const [showOriginalLockImg, setShowOriginalLockImg] = useState(false)
 
   // Status flags
   const isStage1Solved = solvedChallenges.includes("stage1")
@@ -1237,7 +1240,7 @@ Do not assume the first result is the answer. Follow the evidence.`
                         The ciphertext does not appear to be random. Its structure suggests that Kernel0X used a simple classical substitution technique to conceal the note.
                       </p>
                       <p>
-                        You already have everything you need from previous stages. The numbers in the Stage 1 clue (<span className="text-[#9dff1f] font-bold">K0X-17</span>) are needed to decode the cipher.
+                        Kernel0X secured the Caesar shift offset behind a combination lock logic puzzle. Crack the lock to discover the single-digit shift value needed to decode the cipher.
                       </p>
                       <p>
                         Decode the recovered ciphertext and uncover the message left by Kernel0X.
@@ -1256,58 +1259,199 @@ Do not assume the first result is the answer. Follow the evidence.`
                         </code>
                       </div>
                       <p className="text-gray-400 text-[11px] mt-2">
-                        No new file is required for this stage. Decode this recovered ciphertext using the numbers from the Stage 1 clue.
+                        No new file is required for this stage. Decode this recovered ciphertext using the 1-digit shift key recovered from the lock puzzle below.
                       </p>
                     </div>
 
-                    {/* Progressive Hints Section */}
-                    <div className="border border-[#1c231d] bg-[#070907] p-4 sm:p-5 mb-6">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2 font-mono text-xs text-[#9dff1f]">
-                          <HelpCircle className="w-4 h-4" />
-                          <span>INVESTIGATION HINTS (PROGRESSIVE)</span>
+                    {/* Crack The Lock — Shift Key Deduction Puzzle (Matches Website Interface) */}
+                    <div className="border border-[#1c231d] bg-[#070907] p-4 sm:p-5 mb-6 font-mono text-xs">
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2 border-b border-[#1c231d]">
+                        <div className="flex items-center gap-2 text-[#9dff1f] font-bold text-xs sm:text-sm">
+                          <Lock className="w-4 h-4 text-[#9dff1f]" />
+                          <span>// CRACK THE LOCK — FIND THE CAESAR SHIFT (1 DIGIT)</span>
                         </div>
-                        <span className="font-mono text-[10px] text-gray-500">2 HINTS AVAILABLE</span>
+                        <span className="text-gray-500 text-[10px] uppercase tracking-wider bg-[#101610] px-2 py-0.5 border border-[#1c231d]">
+                          Lock Deduction Puzzle
+                        </span>
                       </div>
 
-                      <div className="space-y-2.5 font-mono text-xs">
-                        {/* Hint 1 */}
-                        <div className="border border-[#1c231d] bg-[#0c100c] p-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-gray-400 font-semibold">// HINT 01</span>
+                      <p className="text-gray-300 text-xs mb-4 leading-relaxed">
+                        To uncover the Caesar cipher shift offset, Kernel0X left this combination lock deduction puzzle. Analyze the five clues below to deduce the secret <strong className="text-[#9dff1f]">1-digit</strong> shift:
+                      </p>
+
+                      {/* Tactical Clue Grid Matching Website Interface */}
+                      <div className="bg-[#0b100b] border border-[#1c231d] p-3 sm:p-4 mb-4">
+                        <div className="text-[11px] text-gray-400 font-bold mb-3 flex items-center justify-between">
+                          <span>LOCK CONSTRAINT MATRIX:</span>
+                          <span className="text-[#9dff1f] text-[10px]">ANSWER IS 1 DIGIT</span>
+                        </div>
+
+                        <div className="space-y-2">
+                          {/* Row 1 */}
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2 bg-[#070a07] border border-[#172016]">
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              {["2", "4", "6", "5"].map((digit, i) => (
+                                <span
+                                  key={i}
+                                  className="w-7 h-7 sm:w-8 sm:h-8 bg-[#121811] border border-[#1f2d1e] text-[#9dff1f] font-bold text-xs sm:text-sm flex items-center justify-center font-mono shadow-[inset_0_0_8px_rgba(0,0,0,0.8)]"
+                                >
+                                  {digit}
+                                </span>
+                              ))}
+                            </div>
+                            <div className="text-gray-300 text-xs sm:text-right">
+                              <span className="text-gray-500 mr-1.5">—</span>
+                              <span className="text-amber-400/90 font-semibold">2 digits correct</span>, all wrongly placed
+                            </div>
+                          </div>
+
+                          {/* Row 2 */}
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2 bg-[#070a07] border border-[#172016]">
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              {["4", "7", "3", "8"].map((digit, i) => (
+                                <span
+                                  key={i}
+                                  className="w-7 h-7 sm:w-8 sm:h-8 bg-[#121811] border border-[#1f2d1e] text-[#9dff1f] font-bold text-xs sm:text-sm flex items-center justify-center font-mono shadow-[inset_0_0_8px_rgba(0,0,0,0.8)]"
+                                >
+                                  {digit}
+                                </span>
+                              ))}
+                            </div>
+                            <div className="text-gray-300 text-xs sm:text-right">
+                              <span className="text-gray-500 mr-1.5">—</span>
+                              <span className="text-amber-400/90 font-semibold">2 digits correct</span>, all wrongly placed
+                            </div>
+                          </div>
+
+                          {/* Row 3 */}
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2 bg-[#070a07] border border-[#172016]">
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              {["9", "2", "5", "4"].map((digit, i) => (
+                                <span
+                                  key={i}
+                                  className="w-7 h-7 sm:w-8 sm:h-8 bg-[#121811] border border-[#1f2d1e] text-[#9dff1f] font-bold text-xs sm:text-sm flex items-center justify-center font-mono shadow-[inset_0_0_8px_rgba(0,0,0,0.8)]"
+                                >
+                                  {digit}
+                                </span>
+                              ))}
+                            </div>
+                            <div className="text-gray-300 text-xs sm:text-right">
+                              <span className="text-gray-500 mr-1.5">—</span>
+                              <span className="text-amber-400/90 font-semibold">2 digits correct</span>, all wrongly placed
+                            </div>
+                          </div>
+
+                          {/* Row 4 */}
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2 bg-[#0a1309] border border-[#9dff1f]/30">
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              {["7", "8", "4", "6"].map((digit, i) => (
+                                <span
+                                  key={i}
+                                  className="w-7 h-7 sm:w-8 sm:h-8 bg-[#142013] border border-[#1f2d1e] text-gray-200 font-bold text-xs sm:text-sm flex items-center justify-center font-mono shadow-[inset_0_0_8px_rgba(0,0,0,0.8)]"
+                                >
+                                  {digit}
+                                </span>
+                              ))}
+                            </div>
+                            <div className="text-gray-200 text-xs sm:text-right">
+                              <span className="text-[#9dff1f] mr-1.5">&gt;</span>
+                              <span className="text-[#9dff1f] font-bold">1 digit correct, rightly placed</span>
+                            </div>
+                          </div>
+
+                          {/* Row 5 */}
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2 bg-[#070a07] border border-[#172016]">
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              {["5", "6", "4", "9"].map((digit, i) => (
+                                <span
+                                  key={i}
+                                  className="w-7 h-7 sm:w-8 sm:h-8 bg-[#121811] border border-[#1f2d1e] text-[#9dff1f] font-bold text-xs sm:text-sm flex items-center justify-center font-mono shadow-[inset_0_0_8px_rgba(0,0,0,0.8)]"
+                                >
+                                  {digit}
+                                </span>
+                              ))}
+                            </div>
+                            <div className="text-gray-300 text-xs sm:text-right">
+                              <span className="text-gray-500 mr-1.5">—</span>
+                              <span className="text-amber-400/90 font-semibold">1 digit correct</span>, wrongly placed
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Tumbler / Image Toggle Bar */}
+                        <div className="mt-3 pt-3 border-t border-[#172016] flex flex-wrap items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 text-gray-400 text-xs">
+                            <Lock className="w-3.5 h-3.5 text-[#9dff1f]" />
+                            <span className="text-[11px]">TUMBLER REGISTER:</span>
+                            <div className="flex items-center gap-1">
+                              <span className="w-5 h-5 border border-[#9dff1f]/50 bg-[#070907] text-[#9dff1f] font-bold flex items-center justify-center text-[10px]">
+                                {stage3LockGuess === "7" ? "7" : "?"}
+                              </span>
+                              <span className="w-5 h-5 border border-[#1c231d] bg-[#070907] text-gray-600 flex items-center justify-center text-[10px]">-</span>
+                              <span className="w-5 h-5 border border-[#1c231d] bg-[#070907] text-gray-600 flex items-center justify-center text-[10px]">-</span>
+                              <span className="w-5 h-5 border border-[#1c231d] bg-[#070907] text-gray-600 flex items-center justify-center text-[10px]">-</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Interactive Key Verification Box */}
+                      <div className="p-3.5 bg-[#0d120d] border border-[#1c231d] space-y-2">
+                        <label className="block text-[11px] text-gray-300 font-semibold tracking-wide">
+                          TEST YOUR 1-DIGIT SHIFT KEY GUESS:
+                        </label>
+                        <div className="flex flex-col sm:flex-row gap-2">
+                          <input
+                            type="text"
+                            maxLength={1}
+                            value={stage3LockGuess}
+                            onChange={(e) => setStage3LockGuess(e.target.value.replace(/[^0-9]/g, ""))}
+                            placeholder="ENTER 1 DIGIT (0-9)..."
+                            className="flex-1 bg-[#070907] border border-[#1c231d] focus:border-[#9dff1f] text-[#9dff1f] px-3 py-2 font-mono text-sm tracking-widest outline-none font-bold"
+                          />
+                          {stage3LockGuess && (
                             <button
                               type="button"
-                              onClick={() => setStage3Hint1Revealed(!stage3Hint1Revealed)}
-                              className="text-[#9dff1f] hover:underline text-[11px] cursor-pointer"
+                              onClick={() => setStage3LockGuess("")}
+                              className="px-3 py-2 bg-[#141a12] border border-[#1c231d] text-gray-400 hover:text-white cursor-pointer text-xs"
                             >
-                              {stage3Hint1Revealed ? "[ HIDE HINT ]" : "[ REVEAL HINT 1 ]"}
+                              CLEAR
                             </button>
-                          </div>
-                          {stage3Hint1Revealed && (
-                            <p className="mt-2 text-white pt-2 border-t border-[#1c231d] text-xs leading-relaxed">
-                              "The letters appear to have been shifted by the same amount. Remember that the numbers in the Stage 1 clue (K0X-17) are needed to decode the cipher."
-                            </p>
                           )}
                         </div>
 
-                        {/* Hint 2 */}
-                        <div className="border border-[#1c231d] bg-[#0c100c] p-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-gray-400 font-semibold">// HINT 02</span>
-                            <button
-                              type="button"
-                              onClick={() => setStage3Hint2Revealed(!stage3Hint2Revealed)}
-                              className="text-[#9dff1f] hover:underline text-[11px] cursor-pointer"
-                            >
-                              {stage3Hint2Revealed ? "[ HIDE HINT ]" : "[ REVEAL HINT 2 ]"}
-                            </button>
+                        {stage3LockGuess.length > 0 && (
+                          <div className="pt-1">
+                            {stage3LockGuess === "7" ? (
+                              <div className="p-2.5 bg-[#10190e] border border-[#9dff1f] text-[#9dff1f] text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <div className="flex items-center gap-1.5 font-bold">
+                                  <CheckCircle className="w-4 h-4 shrink-0 text-[#9dff1f]" />
+                                  <span>
+                                    LOCK CRACKED: SHIFT KEY = 7 (ROT-7) — Apply a Caesar decode with shift -7 to the ciphertext below!
+                                  </span>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    navigator.clipboard.writeText("7")
+                                    setCopiedStage3Lock(true)
+                                    setTimeout(() => setCopiedStage3Lock(false), 2000)
+                                  }}
+                                  className="text-[10px] bg-[#9dff1f] text-black px-2.5 py-1 font-bold hover:bg-[#b0ff42] cursor-pointer shrink-0"
+                                >
+                                  {copiedStage3Lock ? "[ COPIED! ]" : "[ COPY SHIFT: 7 ]"}
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="p-2 bg-[#190e0e] border border-red-500/50 text-red-400 text-xs flex items-center gap-1.5">
+                                <AlertCircle className="w-4 h-4 shrink-0" />
+                                <span>
+                                  Incorrect shift key. Study the 5 constraints to isolate the single valid lock digit.
+                                </span>
+                              </div>
+                            )}
                           </div>
-                          {stage3Hint2Revealed && (
-                            <p className="mt-2 text-white pt-2 border-t border-[#1c231d] text-xs leading-relaxed">
-                              "The correct shift is 7 positions backward. Apply a Caesar Cipher Decode using a shift of -7."
-                            </p>
-                          )}
-                        </div>
+                        )}
                       </div>
                     </div>
 
